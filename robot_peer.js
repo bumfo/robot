@@ -1,12 +1,8 @@
 const Vec = require('./vec.js');
+const Utils = require('./utils.js');
+
 const Point = require('./point.js');
 const State = require('./state.js');
-
-const Utils = {
-	limit(min, val, max) {
-		return Math.max(min, Math.min(val, max));
-	},
-};
 
 class LoopState {
 	constructor(fn) {
@@ -15,7 +11,6 @@ class LoopState {
 		this.loopFn = fn;
 	}
 	exec(peer, bases) {
-		// console.log(this.states);
 		if (!this.states.some(state => state.waiting.length)) {
 			let states = peer.states;
 			this.states.currentState = states.currentState;
