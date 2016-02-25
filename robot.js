@@ -10,18 +10,6 @@ that.position.add({
 	y: 100,
 });
 
-// that.setAhead(100);
-// that.execute();
-// that.execute();
-// that.execute();
-// that.execute();
-// that.execute();
-// that.execute();
-// that.execute();
-// that.execute();
-// that.execute();
-// that.turn(90);
-
 // that.loop(() => { // square
 // 	that.turn(90);
 // 	that.ahead(200);

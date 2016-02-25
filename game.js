@@ -1,4 +1,5 @@
 const RobotPeer = require('./robot_peer.js');
+const Peer = require('./peer.js');
 const Canvas = require('./canvas.js');
 
 class Game {
@@ -34,7 +35,7 @@ class Game {
 		this.canvas.resize(width, height);
 	}
 	getRobotPeer() {
-		let peer = new RobotPeer();
+		let peer = new Peer();
 		peer.gfx = this.gfx;
 
 		return peer;
