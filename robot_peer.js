@@ -15,6 +15,7 @@ class RobotPeer {
 		this.velocity = 0;
 		this.heading = 0;
 		this.maxVelocity = 8;
+		this.acceleration = 0;
 
 		this.states = new States();
 	}

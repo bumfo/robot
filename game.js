@@ -21,8 +21,8 @@ class Game {
 		let frame = () => {
 			this.gfx.clear();
 			this.gfx.strokeBoundary();
-			this.sprites.forEach(that => that.exec());
 			this.sprites.forEach(that => that.update());
+			this.sprites.forEach(that => that.exec());
 			this.sprites.forEach(that => that.draw());
 
 			requestAnimationFrame(frame);
