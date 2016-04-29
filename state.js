@@ -62,6 +62,26 @@ class State {
 		if (!this.turn)
 			return true;
 	}
+
+	$power(peer) {
+		let power = this.power;
+		if (!power)
+			return true;
+
+		let bulletPeer = peer.getBulletPeer(power);
+		bulletPeer.position.add(peer.position);
+		bulletPeer.heading = peer.heading;
+
+		peer.gunHeat += Rules.getGunHeat(power);
+
+		peer.addBulletPeer(bulletPeer);
+
+		// bulletPeer.draw(); ///
+
+		this.power = 0;
+
+		return true;
+	}
 }
 
 module.exports = State;

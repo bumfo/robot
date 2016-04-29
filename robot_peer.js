@@ -6,6 +6,8 @@ const States = require('./states.js');
 
 const Rules = require('./rules.js');
 
+const BulletPeer = require('./bullet_peer.js');
+
 const {
 	Circle, Rectangle
 } = require('./shapes.js');
@@ -14,6 +16,7 @@ class RobotPeer {
 	constructor() {
 		this.position = new Point();
 		this.shape = new Rectangle(Rules.botWidth, Rules.botHeight);
+		this.energy = Rules.initialEnergy;
 		this.velocity = 0;
 		this.heading = 0;
 		this.maxVelocity = 8;
@@ -37,6 +40,10 @@ class RobotPeer {
 	}
 	turnLeft(val) {
 		this.turn(-val);
+	}
+	fire(val) {
+		this.setFire(val);
+		this.states.flush('power');
 	}
 
 	loop(fn) {
@@ -62,6 +69,15 @@ class RobotPeer {
 	setTurnLeft(val) {
 		this.setTurn(-val);
 	}
+	setFire(val) {
+		if (this.gunHeat > 0 || !(0.1 <= val && val <= 3))
+			return;
+
+		this.states.set({
+			power: val,
+		});
+	}
+
 	execute() {
 		this.states.set();
 		this.states.flush();
@@ -71,6 +87,10 @@ class RobotPeer {
 		this.velocity += this.acceleration;
 		this.acceleration = 0;
 		this.position.project(this.velocity, this.heading);
+
+		this.gunHeat = Math.max(0, this.gunHeat - Rules.gunCoolRate);
+		if (this.gunHeat < Number.EPSILON)
+			this.gunHeat = 0;
 	}
 
 	exec() {
@@ -88,6 +108,25 @@ class RobotPeer {
 
 	setMaxVelocity(val) {
 		this.maxVelocity = Utils.limit(0, val, 8);
+	}
+
+
+
+
+	getBulletPeer(power) {
+		let peer = new BulletPeer(power);
+		peer.owner = this;
+		peer.gfx = this.gfx;
+
+		return peer;
+	}
+
+	addBulletPeer(bulletPeer) {
+		this.game.addProjectile(bulletPeer);
+	}
+
+	damage(damage) {
+		this.energy -= damage;
 	}
 }
 

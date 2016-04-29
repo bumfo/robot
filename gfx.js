@@ -28,7 +28,7 @@ class Gfx {
 		ctx.lineWidth = 1;
 		ctx.globalAlpha = 1;
 		ctx.strokeStyle = 'rgba(255,255,255,1)';
-		ctx.fillStyle = 'rgba(255,255,255,.5)';
+		ctx.fillStyle = 'rgba(255,255,255,1)';
 		ctx.font = "lighter 16px Helvetica Neue";
 	}
 
@@ -52,6 +52,12 @@ class Gfx {
 		this.ctx.arc(x, y, R, 0, Math.PI * 2);
 		this.ctx.stroke();
 	}
+	fillCircle(x, y, R) {
+		this.ctx.beginPath();
+		this.ctx.arc(x, y, R, 0, Math.PI * 2);
+		this.ctx.fill();
+	}
+
 	strokeArc(x, y, R, start = 0, end = Math.PI * 2) {
 		this.ctx.beginPath();
 		this.ctx.arc(x, y, R, start, end);

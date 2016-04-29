@@ -1,6 +1,21 @@
 const Utils = require('./utils.js');
 
 class Rules {
+	static getBulletDamage(power) {
+		let damage = 4 * power;
+
+		if (power > 1)
+			damage += 2 * (power - 1);
+
+		return damage;
+	}
+	static getBulletSpeed(power) {
+		return 20 - 3 * power;
+	}
+	static getGunHeat(power) {
+		return 1 + (power / 5);
+	}
+
 	static getNewVelocity(velocity, distance, maxVelocity) {
 		if (distance < 0)
 			return -this.getNewVelocity(-velocity, -distance);
@@ -34,8 +49,11 @@ class Rules {
 }
 
 Object.assign(Rules, {
+	initialEnergy: 100,
 	botWidth: 36,
 	botHeight: 36,
+	initialGunHeat: 3,
+	gunCoolRate: 0.1,
 });
 
 module.exports = Rules;
