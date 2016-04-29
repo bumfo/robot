@@ -1,5 +1,4 @@
 const RobotPeer = require('./robot_peer.js');
-const Peer = require('./peer.js');
 const Canvas = require('./canvas.js');
 
 class Game {

@@ -39,8 +39,6 @@ class Gfx {
 		this.ctx.globalAlpha = 0.2;
 		this.ctx.strokeRect(paddingX, paddingY, this.width - 1 - 2 * paddingX, this.height - 1 - 2 * paddingY);
 		this.ctx.globalAlpha = 1;
-		// this.strokeCircle(this.width / 2, this.height / 2, Math.min(this.width, this.height) / 2 - 50);
-		// this.ctx.fillText('hi', 4, this.height - 4);
 	}
 
 	clear(width = this._width * this._scale / this.scale, height = this._height * this._scale / this.scale) {
@@ -85,7 +83,6 @@ class Gfx {
 		this.ctx.lineTo(...Vec2.add(pos, oneThirdHeight));
 		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([-width, 0], cos, sin)));
 		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([0, -height], cos, sin)));
-		// this.ctx.closePath();
 		this.ctx.stroke();
 	}
 }

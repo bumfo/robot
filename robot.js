@@ -37,3 +37,14 @@ that.loop(() => { // square
 // });
 
 game.addSprite(that);
+
+
+
+let bot = game.getRobotPeer();
+
+bot.position.add({
+	x: 200,
+	y: 200,
+});
+
+game.addSprite(bot);
