@@ -79,9 +79,13 @@ class Gfx {
 		this.ctx.beginPath();
 		this.ctx.moveTo(...Vec2.add(pos, Vec2.rotate([-width / 2, -height / 2], cos, sin)));
 		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([width, 0], cos, sin)));
-		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([0, height], cos, sin)));
+		let oneThirdHeight = Vec2.rotate([0, height / 3], cos, sin);
+		this.ctx.lineTo(...Vec2.add(pos, oneThirdHeight));
+		this.ctx.moveTo(...Vec2.add(pos, oneThirdHeight));
+		this.ctx.lineTo(...Vec2.add(pos, oneThirdHeight));
 		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([-width, 0], cos, sin)));
-		this.ctx.closePath();
+		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([0, -height], cos, sin)));
+		// this.ctx.closePath();
 		this.ctx.stroke();
 	}
 }
