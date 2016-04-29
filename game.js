@@ -35,7 +35,7 @@ class Game {
 		this.canvas.resize(width, height);
 	}
 	getRobotPeer() {
-		let peer = new Peer();
+		let peer = new RobotPeer();
 		peer.gfx = this.gfx;
 
 		return peer;

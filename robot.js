@@ -10,10 +10,10 @@ that.position.add({
 	y: 100,
 });
 
-// that.loop(() => { // square
-// 	that.turn(90);
-// 	that.ahead(200);
-// });
+that.loop(() => { // square
+	that.ahead(200);
+	that.turn(90);
+});
 
 // that.loop(() => { // box
 // 	that.setTurn(90);
@@ -30,10 +30,10 @@ that.position.add({
 // 	that.ahead(200);
 // });
 
-that.setAhead(200);
-that.execute();
-that.loop(() => {
-	that.turn(10);
-});
+// that.setAhead(200);
+// that.execute();
+// that.loop(() => {
+// 	that.turn(10);
+// });
 
 game.addSprite(that);
