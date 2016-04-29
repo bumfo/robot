@@ -20,6 +20,34 @@ class Vec {
 
 		return this;
 	}
+
+	static times(u, k) {
+		return new this(k * u.x, k * u.y);
+	}
+
+	static plus(u, v) {
+		return new this(u.x + v.x, u.y + v.y);
+	}
+
+	static minus(u, v) {
+		return new this(u.x - v.x, u.y - v.y);
+	}
+
+	static dot(u, v) {
+		return u.x * v.x + u.y * v.y;
+	}
+
+	static cross(u, v) {
+		return u.x * v.y - u.y * v.x;
+	}
+
+	static polar(rho, theta) {
+		return new this(rho * Math.cos(theta), rho * Math.sin(theta));
+	}
+
+	static oriented2(x, y, cos, sin) {
+		return new this(x * cos - y * sin, y * cos + x * sin);
+	}
 }
 
 module.exports = Vec;

@@ -50,6 +50,10 @@ class Vec2 {
 	static cross(u, v) {
 		return u[0] * v[1] - u[1] * v[0];
 	}
+
+	static polar(rho, theta) {
+		return [rho * Math.cos(theta), rho * Math.sin(theta)];
+	}
 }
 
 module.exports = Vec2;
