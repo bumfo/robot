@@ -9,6 +9,9 @@ class Rules {
 
 		return damage;
 	}
+	static getBulletHitBonus(power) {
+		return 3 * power;
+	}
 	static getBulletSpeed(power) {
 		return 20 - 3 * power;
 	}

@@ -37,6 +37,58 @@ function segmentIntersection(p, r, q, s) {
 	}
 }
 
+function segmentRectangleIntersection(p, r, pos, halfWidth, halfHeight, heading) {
+	let collides = false;
+
+	let cos = Math.cos(heading + Math.PI);
+	let sin = Math.sin(heading + Math.PI);
+
+	let pOriented = Vec.oriented(Vec.minus(p, pos), cos, sin);
+	let prOriented = Vec.oriented(Vec.minus(Vec.plus(p, r), pos), cos, sin);
+
+	collides = collides || isPointInBB(pOriented, halfWidth, halfHeight);
+	collides = collides || isPointInBB(prOriented, halfWidth, halfHeight);
+
+	if (collides)
+		return true;
+
+	let q = Vec.plus(pos, Vec.oriented2(-halfWidth, -halfHeight, cos, sin));
+	let s;
+
+	s = Vec.oriented2(halfWidth * 2, 0, cos, sin);
+	collides = segmentIntersection(p, r, q, s);
+	q.add(s);
+
+	if (collides)
+		return true;
+
+	s = Vec.oriented2(0, halfHeight * 2, cos, sin);
+	collides = segmentIntersection(p, r, q, s);
+	q.add(s);
+
+	if (collides)
+		return true;
+
+	s = Vec.oriented2(-halfWidth * 2, 0, cos, sin);
+	collides = segmentIntersection(p, r, q, s);
+	q.add(s);
+
+	if (collides)
+		return true;
+
+	s = Vec.oriented2(0, -halfHeight * 2, cos, sin);
+	collides = segmentIntersection(p, r, q, s);
+
+	if (collides)
+		return true;
+
+	return false;
+}
+
+function isPointInBB(point, halfWidth, halfHeight) {
+	return Math.abs(point.x) <= halfWidth && Math.abs(point.y) <= halfHeight;
+}
+
 class BulletPeer {
 	constructor(power) {
 		this.power = power;
@@ -77,40 +129,13 @@ class BulletPeer {
 			if (that === this.owner)
 				continue;
 
-			let p = this.position;
-			let r = Vec.polar(-this.velocity, this.heading);
-
-			let collides = false;
-			let cos = Math.cos(that.heading);
-			let sin = Math.sin(that.heading);
-			let q = Vec.plus(that.position, Vec.oriented2(-Rules.botSize, -Rules.botSize, cos, sin));
-
-			if (!collides) {
-				let s = Vec.oriented2(Rules.botSize * 2, 0, cos, sin);
-				collides = segmentIntersection(p, r, q, s);
-				q.add(s);
-			}
-
-			if (!collides) {
-				let s = Vec.oriented2(0, Rules.botSize * 2, cos, sin);
-				collides = segmentIntersection(p, r, q, s);
-				q.add(s);
-			}
-
-			if (!collides) {
-				let s = Vec.oriented2(-Rules.botSize * 2, 0, cos, sin);
-				collides = segmentIntersection(p, r, q, s);
-				q.add(s);
-			}
-
-			if (!collides) {
-				let s = Vec.oriented2(0, -Rules.botSize * 2, cos, sin);
-				collides = segmentIntersection(p, r, q, s);
-			}
+			let collides = segmentRectangleIntersection(this.position, Vec.polar(-this.velocity, this.heading), that.position, Rules.botSize, Rules.botSize, that.heading);
 
 			if (collides) {
 				this.explode();
 				that.damage(Rules.getBulletDamage(this.power));
+				this.owner.damage(-Rules.getBulletHitBonus(this.power));
+
 				if (that.energy <= 0) {
 					that.nonalive = true;
 				}

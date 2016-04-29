@@ -96,6 +96,9 @@ class RobotPeer {
 		this.gunHeat = Math.max(0, this.gunHeat - Rules.gunCoolRate);
 		if (this.gunHeat < Number.EPSILON)
 			this.gunHeat = 0;
+
+		if (this.energy <= 0)
+			this.nonalive = true;
 	}
 
 	exec() {

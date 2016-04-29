@@ -74,6 +74,7 @@ class State {
 		bulletPeer.heading = peer.heading;
 
 		peer.gunHeat += Rules.getGunHeat(power);
+		peer.energy -= power;
 
 		peer.addBulletPeer(bulletPeer);
 

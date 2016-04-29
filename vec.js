@@ -45,6 +45,12 @@ class Vec {
 		return new this(rho * Math.cos(theta), rho * Math.sin(theta));
 	}
 
+	static oriented(u, cos, sin) {
+		let x = u.x;
+		let y = u.y;
+		return new this(x * cos - y * sin, y * cos + x * sin);
+	}
+
 	static oriented2(x, y, cos, sin) {
 		return new this(x * cos - y * sin, y * cos + x * sin);
 	}
