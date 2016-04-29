@@ -1,5 +1,6 @@
-let keys = ['turn', 'ahead'];
 const Rules = require('./rules.js');
+
+const keys = ['turn', 'ahead', 'power'];
 
 class State {
 	constructor() {

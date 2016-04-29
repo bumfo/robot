@@ -50,8 +50,12 @@ class Rules {
 
 Object.assign(Rules, {
 	initialEnergy: 100,
+	maxVelocity: 8,
+
+	botSize: 18,
 	botWidth: 36,
 	botHeight: 36,
+
 	initialGunHeat: 3,
 	gunCoolRate: 0.1,
 });

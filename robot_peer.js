@@ -15,12 +15,17 @@ const {
 class RobotPeer {
 	constructor() {
 		this.position = new Point();
-		this.shape = new Rectangle(Rules.botWidth, Rules.botHeight);
+		this.shape = new Rectangle(Rules.botSize * 2, Rules.botSize * 2);
+
 		this.energy = Rules.initialEnergy;
+
 		this.velocity = 0;
 		this.heading = 0;
-		this.maxVelocity = 8;
+
+		this.maxVelocity = Rules.maxVelocity;
 		this.acceleration = 0;
+
+		this.gunHeat = Rules.initialGunHeat;
 
 		this.states = new States();
 	}
@@ -107,7 +112,7 @@ class RobotPeer {
 	}
 
 	setMaxVelocity(val) {
-		this.maxVelocity = Utils.limit(0, val, 8);
+		this.maxVelocity = Utils.limit(0, val, Rules.maxVelocity);
 	}
 
 

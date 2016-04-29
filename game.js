@@ -40,7 +40,7 @@ class Game {
 					this.paused = false;
 					this.pauseThen = true;
 					break;
-				case 'KeyB': 
+				case 'KeyB':
 					this.paused = !this.paused;
 					break;
 			}
