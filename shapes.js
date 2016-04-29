@@ -1,5 +1,5 @@
 class Circle {
-	constructor(R = 18) {
+	constructor(R) {
 		this.R = R;
 	}
 	draw(position, gfx, heading) {
@@ -8,10 +8,14 @@ class Circle {
 		else
 			gfx.strokeCircle(position.x, position.y, this.R);
 	}
+
+	fill(position, gfx) {
+		gfx.fillCircle(position.x, position.y, this.R);
+	}
 }
 
 class Rectangle {
-	constructor(width = 36, height = 36) {
+	constructor(width, height) {
 		this.width = width;
 		this.height = height;
 	}

@@ -33,4 +33,9 @@ class Rules {
 	}
 }
 
+Object.assign(Rules, {
+	botWidth: 36,
+	botHeight: 36,
+});
+
 module.exports = Rules;
