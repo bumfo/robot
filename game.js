@@ -18,7 +18,24 @@ class Game {
 		});
 		this.resize();
 
+		window.addEventListener('keydown', e => {
+			switch (e.code) {
+				case 'Space':
+					this.paused = false;
+					this.pauseThen = true;
+					break;
+				case 'KeyB': 
+					this.paused = !this.paused;
+					break;
+			}
+		});
+
 		let frame = () => {
+			if (this.paused) {
+				requestAnimationFrame(frame);
+				return;
+			}
+
 			this.gfx.clear();
 			this.gfx.strokeBoundary();
 			this.sprites.forEach(that => that.update());
@@ -26,6 +43,11 @@ class Game {
 			this.sprites.forEach(that => that.draw());
 
 			requestAnimationFrame(frame);
+
+			if (this.pauseThen) {
+				this.pauseThen = false;
+				this.paused = true;
+			}
 		}
 
 		requestAnimationFrame(frame);
