@@ -1,3 +1,5 @@
+const Vec2 = require('./vec2.js');
+
 class Gfx {
 	constructor(ctx, scale) {
 		this.ctx = ctx;
@@ -47,14 +49,39 @@ class Gfx {
 
 		this.ctx.clearRect(paddingX - 1, paddingY - 1, width + 1, height + 1);
 	}
-	strokeCircle(x, y, R = 18) {
+	strokeCircle(x, y, R) {
 		this.ctx.beginPath();
 		this.ctx.arc(x, y, R, 0, Math.PI * 2);
 		this.ctx.stroke();
 	}
-	strokeArc(x, y, R = 18, start = 0, end = Math.PI * 2) {
+	strokeArc(x, y, R, start = 0, end = Math.PI * 2) {
 		this.ctx.beginPath();
 		this.ctx.arc(x, y, R, start, end);
+		this.ctx.stroke();
+	}
+
+	strokeRectangle(x, y, width, height) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(x, y);
+		this.ctx.lineTo(x + width, y);
+		this.ctx.lineTo(x + width, y + height);
+		this.ctx.lineTo(x, y + height);
+		this.ctx.closePath();
+		this.ctx.stroke();
+	}
+
+	strokeRectangleOriented(x, y, width, height, heading) {
+		let cos = Math.cos(heading);
+		let sin = Math.sin(heading);
+
+		let pos = [x, y];
+
+		this.ctx.beginPath();
+		this.ctx.moveTo(...Vec2.add(pos, Vec2.rotate([-width / 2, -height / 2], cos, sin)));
+		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([width, 0], cos, sin)));
+		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([0, height], cos, sin)));
+		this.ctx.lineTo(...Vec2.add(pos, Vec2.rotate([-width, 0], cos, sin)));
+		this.ctx.closePath();
 		this.ctx.stroke();
 	}
 }

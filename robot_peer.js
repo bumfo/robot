@@ -4,9 +4,14 @@ const Utils = require('./utils.js');
 const Point = require('./point.js');
 const States = require('./states.js');
 
+const {
+	Circle, Rectangle
+} = require('./shapes.js');
+
 class RobotPeer {
 	constructor() {
 		this.position = new Point();
+		this.shape = new Rectangle();
 		this.velocity = 0;
 		this.heading = 0;
 		this.maxVelocity = 8;
@@ -71,7 +76,7 @@ class RobotPeer {
 	}
 
 	draw() {
-		this.position.draw(this.gfx, this.heading);
+		this.shape.draw(this.position, this.gfx, this.heading);
 	}
 
 	setNewVelocity(val) {
