@@ -1,4 +1,5 @@
 let keys = ['turn', 'ahead'];
+const Rules = require('./rules.js');
 
 class State {
 	constructor() {
@@ -37,7 +38,7 @@ class State {
 		let distance = this.ahead;
 		if (!distance)
 			distance = 0;
-		let velocity = peer.getNewVelocity(peer.velocity, distance);
+		let velocity = Rules.getNewVelocity(peer.velocity, distance, peer.maxVelocity);
 		peer.setNewVelocity(velocity);
 
 		if (this.ahead !== void 0)
