@@ -10,11 +10,13 @@ const BulletPeer = require('./bullet_peer.js');
 const ExplosionPeer = require('./explosion_peer.js');
 
 const {
-	Circle, Rectangle
+	Circle, Sector, Rectangle
 } = require('./shapes.js');
 
 class RobotPeer {
 	constructor() {
+		this.states = new States();
+
 		this.position = new Point();
 		this.shape = new Rectangle(Rules.botSize * 2, Rules.botSize * 2);
 
@@ -23,12 +25,20 @@ class RobotPeer {
 		this.velocity = 0;
 		this.heading = 0;
 
+		this.turnRate = 0;
+
 		this.maxVelocity = Rules.maxVelocity;
 		this.acceleration = 0;
 
+		this.gunHeading = 0;
 		this.gunHeat = Rules.initialGunHeat;
 
-		this.states = new States();
+		this.radarHeading = 0;
+		this.radarSector = new Sector(1000, this.radarHeading, this.radarHeading);
+		this.scans = [];
+
+		this.adjustGunForRobotTurn = false;
+		this.adjustRadarForGunTurn = false;
 	}
 	ahead(val) {
 		this.setAhead(val);
@@ -91,7 +101,20 @@ class RobotPeer {
 		this.states.flush();
 	}
 
-	update() {
+	update(sprites) {
+		sprites.forEach(that => {
+			this.tryScan(that);
+			that.tryScan(this);
+		});
+
+		this.radarSector.headingB = this.radarHeading;
+
+		this.turnBody(this.turnRate);
+		this.turnRate = 0;
+		this.turnRadar(0);
+
+		this.radarSector.headingA = this.radarHeading;
+
 		this.velocity += this.acceleration;
 		this.acceleration = 0;
 		this.position.project(this.velocity, this.heading);
@@ -104,13 +127,33 @@ class RobotPeer {
 			this.explode(); ///
 	}
 
+	turnBody(turnRate) {
+		this.heading += turnRate;
+		if (!this.adjustGunForRobotTurn)
+			this.turnGun(turnRate);
+	}
+
+	turnGun(turnRate) {
+		this.gunHeading += turnRate;
+		if (!this.adjustRadarForGunTurn)
+			this.turnRadar(turnRate);
+	}
+
+	turnRadar(turnRate) {
+		this.radarHeading += turnRate;
+	}
+
 	exec() {
 		// console.log(JSON.stringify(this.states));
 		this.states.exec(this);
 	}
 
 	draw() {
-		this.shape.stroke(this.position, this.gfx, this.heading);
+		this.shape.stroke(this.gfx, this.position, this.heading);
+
+		let clockwise = Angle.normalRelative(this.radarSector.headingB - this.radarSector.headingA) > 0;
+		this.radarSector.fill(this.gfx, this.position, clockwise, 0.02);
+		this.radarSector.stroke(this.gfx, this.position, clockwise, 0.02);
 	}
 
 	setNewVelocity(val) {
@@ -158,6 +201,34 @@ class RobotPeer {
 		explosionPeer.update(40 * Math.tan(Rules.botSize * Math.SQRT2 / 100));
 
 		this.addExplosionPeer(explosionPeer);
+	}
+
+	inRange(phi) {
+		return Angle.inRange(phi, Angle.range(this.radarSector.headingA, this.radarSector.headingB));
+	}
+
+	inSector(that) {
+		// let phi = this.position.phi(that.position);
+		// return this.inRange(phi);
+
+		let d = this.position.distance(that.position);
+		let phi = this.position.phi(that.position);
+		let side = Math.asin(18 / d);
+		let range = Angle.range(phi - side, phi + side);
+
+		let scanRange;
+
+		if (Angle.normalRelative(this.radarSector.headingB - this.radarSector.headingA) > 0)
+			scanRange = [this.radarSector.headingA, this.radarSector.headingB];
+		else
+			scanRange = [this.radarSector.headingB, this.radarSector.headingA];
+
+		return Angle.intersects(range, scanRange);
+	}
+
+	tryScan(that) {
+		if (this.inSector(that))
+			this.scans.push(that);
 	}
 }
 

@@ -1,27 +1,49 @@
-class Circle {
-	constructor(R) {
-		this.R = R;
-	}
-	stroke(position, gfx, opacity) {
-		gfx.strokeCircle(position.x, position.y, this.R, opacity);
-	}
-
-	fill(position, gfx, opacity) {
-		gfx.fillCircle(position.x, position.y, this.R, opacity);
-	}
-}
-
 class Rectangle {
 	constructor(width, height) {
 		this.width = width;
 		this.height = height;
 	}
-	stroke(position, gfx, heading = 0) {
+	stroke(gfx, position, heading = 0) {
 		gfx.strokeRectangleOriented(position.x, position.y, this.width, this.height, heading);
 	}
 }
 
+class Circle {
+	constructor(R) {
+		this.R = R;
+	}
+	stroke(gfx, position, opacity) {
+		gfx.strokeCircle(position.x, position.y, this.R, opacity);
+	}
+
+	fill(gfx, position, opacity) {
+		gfx.fillCircle(position.x, position.y, this.R, opacity);
+	}
+}
+
+class Sector {
+	constructor(R, headingA, headingB) {
+		this.R = R;
+		this.headingA = headingA;
+		this.headingB = headingB;
+	}
+	fill(gfx, position, clockwise, opacity) {
+		if (clockwise)
+			gfx.fillSector(position.x, position.y, this.R, this.headingA, this.headingB, opacity);
+		else
+			gfx.fillSector(position.x, position.y, this.R, this.headingB, this.headingA, opacity);
+	}
+	stroke(gfx, position, clockwise, opacity) {
+		if (clockwise)
+			gfx.strokeSector(position.x, position.y, this.R, this.headingA, this.headingB, opacity);
+		else
+			gfx.strokeSector(position.x, position.y, this.R, this.headingB, this.headingA, opacity);
+	}
+}
+
+
 module.exports = {
-	Circle,
 	Rectangle,
+	Circle,
+	Sector,
 };

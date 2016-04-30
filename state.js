@@ -56,7 +56,7 @@ class State {
 		let maxTurnRate = (10 - 0.75 * Math.abs(peer.velocity)) / 180 * Math.PI;
 		let turnRate = Math.sign(turn) * Math.min(Math.abs(turn), maxTurnRate);
 
-		peer.heading += turnRate;
+		peer.turnRate = turnRate;
 
 		this.turn = turn - turnRate;
 
@@ -71,7 +71,7 @@ class State {
 
 		let bulletPeer = peer.getBulletPeer(power);
 		bulletPeer.position.assign(peer.position);
-		bulletPeer.heading = peer.heading;
+		bulletPeer.heading = peer.gunHeading;
 
 		peer.gunHeat += Rules.getGunHeat(power);
 		peer.energy -= power;

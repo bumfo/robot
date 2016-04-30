@@ -146,7 +146,7 @@ class BulletPeer {
 	}
 
 	draw() {
-		this.shape.fill(this.position, this.gfx);
+		this.shape.fill(this.gfx, this.position);
 	}
 
 	explode(didDamage) {

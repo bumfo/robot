@@ -10,8 +10,12 @@ class Bot {
 		this._peer.heading = heading;
 	}
 
-	loop(fn) {
-		this._peer.loop(fn);
+	loop(val) {
+		this._peer.loop(val);
+	}
+
+	ahead(val) {
+		this._peer.ahead(val);
 	}
 
 	turn(val) {

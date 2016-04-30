@@ -50,12 +50,12 @@ class ExplosionPeer {
 
 	draw() {
 		if (this.didDamage) {
-			this.shape.fill(this.position, this.gfx, this.opacity * 0.8);
-			this.shape.stroke(this.position, this.gfx, this.opacity);
+			this.shape.fill(this.gfx, this.position, this.opacity * 0.8);
+			this.shape.stroke(this.gfx, this.position, this.opacity);
 		} else if (this.isBig) {
-			this.shape.stroke(this.position, this.gfx, this.opacity * 10);
+			this.shape.stroke(this.gfx, this.position, this.opacity * 10);
 		} else {
-			this.shape.stroke(this.position, this.gfx, this.opacity * 1.5);
+			this.shape.stroke(this.gfx, this.position, this.opacity * 1.5);
 		}
 	}
 }

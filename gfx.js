@@ -78,6 +78,36 @@ class Gfx {
 		this.ctx.stroke();
 	}
 
+	fillSector(x, y, R, start = 0, end = Math.PI * 2, opacity = 1) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(x, y);
+		this.ctx.arc(x, y, R, start, end);
+		this.ctx.lineTo(x, y);
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = opacity;
+
+		this.ctx.fill();
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = 1
+	}
+
+	strokeSector(x, y, R, start = 0, end = Math.PI * 2, opacity = 1) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(x, y);
+		this.ctx.arc(x, y, R, start, end);
+		this.ctx.lineTo(x, y);
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = opacity;
+
+		this.ctx.stroke();
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = 1
+	}
+
 	strokeRectangle(x, y, width, height) {
 		this.ctx.beginPath();
 		this.ctx.moveTo(x, y);
