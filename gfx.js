@@ -36,7 +36,7 @@ class Gfx {
 		let paddingX = 0;
 		let paddingY = 0;
 
-		this.ctx.globalAlpha = 0.2;
+		this.ctx.globalAlpha = 0.1;
 		this.ctx.strokeRect(paddingX, paddingY, this.width - 1 - 2 * paddingX, this.height - 1 - 2 * paddingY);
 		this.ctx.globalAlpha = 1;
 	}

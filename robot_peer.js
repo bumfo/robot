@@ -76,12 +76,14 @@ class RobotPeer {
 		this.setTurn(-val);
 	}
 	setFire(val) {
-		if (this.gunHeat > 0 || !(0.1 <= val && val <= 3))
+		if (this.gunHeat > 0)
 			return;
 
-		this.states.set({
-			power: val,
-		});
+		if (0.1 <= val && val <= 3) {
+			this.states.set({
+				power: val,
+			});
+		}
 	}
 
 	execute() {
@@ -118,9 +120,6 @@ class RobotPeer {
 	setMaxVelocity(val) {
 		this.maxVelocity = Utils.limit(0, val, Rules.maxVelocity);
 	}
-
-
-
 
 	getBulletPeer(power) {
 		let peer = new BulletPeer(power);

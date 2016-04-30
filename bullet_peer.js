@@ -105,11 +105,10 @@ class BulletPeer {
 	update(projectiles, sprites) {
 		this.position.project(this.velocity, this.heading);
 
-		if (this.position.x < 0 || this.position.x >= 800) {
+		if (this.position.x < 0 || this.position.x >= 800)
 			this.explode();
-		} else if (this.position.y < 0 || this.position.y >= 600) {
+		else if (this.position.y < 0 || this.position.y >= 600)
 			this.explode();
-		}
 
 		for (let i = 0, n = projectiles.length; i < n; ++i) {
 			let that = projectiles[i];
