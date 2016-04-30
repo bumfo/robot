@@ -20,6 +20,7 @@ class Game {
 	constructor() {
 		this.sprites = [];
 		this.projectiles = [];
+		this.particles = [];
 
 		Canvas.prepare();
 
@@ -55,9 +56,11 @@ class Game {
 			this.gfx.clear();
 			this.gfx.strokeBoundary();
 
-			this.projectiles.forEach(that => !that.nodraw && that.draw());
 			this.sprites.forEach(that => that.draw());
+			this.projectiles.forEach(that => !that.nodraw && that.draw());
+			this.particles.forEach(that => !that.nodraw && that.draw());
 
+			traversal(this.particles, (that, i) => that.update());
 			traversal(this.projectiles, (that, i) => that.update(this.projectiles.slice(0, i), this.sprites));
 			traversal(this.sprites, that => !that.nonalive && that.update());
 
@@ -89,6 +92,10 @@ class Game {
 
 	addProjectile(that) {
 		this.projectiles.push(that);
+	}
+
+	addParticle(that) {
+		this.particles.push(that);
 	}
 }
 

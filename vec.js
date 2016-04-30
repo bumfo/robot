@@ -3,9 +3,15 @@ class Vec {
 		this.x = x;
 		this.y = y;
 	}
-	add(that) {
-		this.x += that.x;
-		this.y += that.y;
+	assign(u) {
+		this.x = u.x;
+		this.y = u.y;
+
+		return this;
+	}
+	add(u) {
+		this.x += u.x;
+		this.y += u.y;
 
 		return this;
 	}

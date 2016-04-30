@@ -132,15 +132,12 @@ class BulletPeer {
 			let collides = segmentRectangleIntersection(this.position, Vec.polar(-this.velocity, this.heading), that.position, Rules.botSize, Rules.botSize, that.heading);
 
 			if (collides) {
-				this.explode();
+				this.explode(true);
 				that.damage(Rules.getBulletDamage(this.power));
 				this.owner.damage(-Rules.getBulletHitBonus(this.power));
 
-				if (that.energy <= 0) {
-					that.nonalive = true;
-				}
-
-				console.log(that.energy);
+				if (that.energy <= 0)
+					that.explode();
 
 				return;
 			}
@@ -153,8 +150,18 @@ class BulletPeer {
 		this.shape.fill(this.position, this.gfx);
 	}
 
-	explode() {
+	explode(didDamage) {
 		this.nonalive = true;
+
+		let explosionPeer = this.owner.getExplosionPeer(this.power);
+
+		explosionPeer.position.assign(this.position);
+		explosionPeer.velocity = this.velocity * 0.8;
+		explosionPeer.heading = this.heading;
+		explosionPeer.didDamage = didDamage;
+		explosionPeer.update(20 * Math.tan((this.shape.R * 2 + 1) / (100 * Math.sqrt(this.power) / Math.sqrt(3))));
+
+		this.owner.addExplosionPeer(explosionPeer);
 	}
 }
 

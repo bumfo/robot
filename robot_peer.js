@@ -7,6 +7,7 @@ const States = require('./states.js');
 const Rules = require('./rules.js');
 
 const BulletPeer = require('./bullet_peer.js');
+const ExplosionPeer = require('./explosion_peer.js');
 
 const {
 	Circle, Rectangle
@@ -98,7 +99,7 @@ class RobotPeer {
 			this.gunHeat = 0;
 
 		if (this.energy <= 0)
-			this.nonalive = true;
+			this.explode(); ///
 	}
 
 	exec() {
@@ -107,7 +108,7 @@ class RobotPeer {
 	}
 
 	draw() {
-		this.shape.draw(this.position, this.gfx, this.heading);
+		this.shape.stroke(this.position, this.gfx, this.heading);
 	}
 
 	setNewVelocity(val) {
@@ -129,12 +130,35 @@ class RobotPeer {
 		return peer;
 	}
 
+	getExplosionPeer(power) {
+		let peer = new ExplosionPeer(power);
+		peer.gfx = this.gfx;
+
+		return peer;
+	}
+
 	addBulletPeer(bulletPeer) {
 		this.game.addProjectile(bulletPeer);
 	}
 
+	addExplosionPeer(bulletPeer) {
+		this.game.addParticle(bulletPeer);
+	}
+
 	damage(damage) {
 		this.energy -= damage;
+	}
+
+	explode() {
+		this.nonalive = true;
+
+		let explosionPeer = this.getExplosionPeer(3);
+
+		explosionPeer.position.assign(this.position);
+		explosionPeer.isBig = true;
+		explosionPeer.update(40 * Math.tan(Rules.botSize * Math.SQRT2 / 100));
+
+		this.addExplosionPeer(explosionPeer);
 	}
 }
 

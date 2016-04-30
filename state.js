@@ -70,15 +70,13 @@ class State {
 			return true;
 
 		let bulletPeer = peer.getBulletPeer(power);
-		bulletPeer.position.add(peer.position);
+		bulletPeer.position.assign(peer.position);
 		bulletPeer.heading = peer.heading;
 
 		peer.gunHeat += Rules.getGunHeat(power);
 		peer.energy -= power;
 
 		peer.addBulletPeer(bulletPeer);
-
-		// bulletPeer.draw(); ///
 
 		this.power = 0;
 

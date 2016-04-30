@@ -5,7 +5,7 @@ let that = game.getRobotPeer();
 
 console.log(that);
 
-that.position.add({
+that.position.assign({
 	x: 100,
 	y: 100,
 });

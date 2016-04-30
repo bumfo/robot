@@ -47,15 +47,29 @@ class Gfx {
 
 		this.ctx.clearRect(paddingX - 1, paddingY - 1, width + 1, height + 1);
 	}
-	strokeCircle(x, y, R) {
+	strokeCircle(x, y, R, opacity = 1) {
 		this.ctx.beginPath();
 		this.ctx.arc(x, y, R, 0, Math.PI * 2);
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = opacity;
+
 		this.ctx.stroke();
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = 1
 	}
-	fillCircle(x, y, R) {
+	fillCircle(x, y, R, opacity = 1) {
 		this.ctx.beginPath();
 		this.ctx.arc(x, y, R, 0, Math.PI * 2);
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = opacity;
+
 		this.ctx.fill();
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = 1
 	}
 
 	strokeArc(x, y, R, start = 0, end = Math.PI * 2) {
