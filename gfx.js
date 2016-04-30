@@ -47,6 +47,21 @@ class Gfx {
 
 		this.ctx.clearRect(paddingX - 1, paddingY - 1, width + 1, height + 1);
 	}
+
+	drawRay(x, y, heading, length, opacity = 1) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(x, y);
+		this.ctx.lineTo(x + length * Math.cos(heading), y + length * Math.sin(heading));
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = opacity;
+
+		this.ctx.stroke();
+
+		if (0 < opacity && opacity < 1)
+			this.ctx.globalAlpha = 1
+	}
+
 	strokeCircle(x, y, R, opacity = 1) {
 		this.ctx.beginPath();
 		this.ctx.arc(x, y, R, 0, Math.PI * 2);

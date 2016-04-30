@@ -1,3 +1,12 @@
+class Ray {
+	constructor(heading) {
+		this.heading = heading;
+	}
+	draw(gfx, position, length) {
+		gfx.drawRay(position.x, position.y, this.heading, length);
+	}
+}
+
 class Rectangle {
 	constructor(width, height) {
 		this.width = width;
@@ -43,6 +52,7 @@ class Sector {
 
 
 module.exports = {
+	Ray,
 	Rectangle,
 	Circle,
 	Sector,

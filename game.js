@@ -73,7 +73,7 @@ class Game {
 
 			traversal(this.particles, (that, i) => that.update());
 			traversal(this.projectiles, (that, i) => that.update(this.projectiles.slice(0, i), this.sprites));
-			traversal(this.sprites, (that, i) => !that.nonalive && that.update(this.sprites.slice(i + 1)));
+			traversal(this.sprites, (that, i) => !that.nonalive && that.update(this.sprites.slice(0, i)));
 
 			this.sprites.forEach(that => that.exec());
 

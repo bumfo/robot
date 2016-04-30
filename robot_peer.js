@@ -10,7 +10,7 @@ const BulletPeer = require('./bullet_peer.js');
 const ExplosionPeer = require('./explosion_peer.js');
 
 const {
-	Circle, Sector, Rectangle
+	Ray, Circle, Sector, Rectangle
 } = require('./shapes.js');
 
 class Emitter {
@@ -44,18 +44,23 @@ class RobotPeer {
 
 		this.velocity = 0;
 		this.heading = 0;
-
 		this.turnRate = 0;
 
 		this.maxVelocity = Rules.maxVelocity;
 		this.acceleration = 0;
 
 		this.gunHeading = 0;
+		this.gunTurnRate = 0;
 		this.gunHeat = Rules.initialGunHeat;
+		this.lastGunHeat = this.gunHeat;
+		this.gunRay = new Ray(this.gunHeading);
 
 		this.radarHeading = 0;
+		this.radarTurnRate = 0;
+		this.radarDot = new Circle(1);
 		this.radarSector = new Sector(1000, this.radarHeading, this.radarHeading);
 		this.scans = [];
+
 
 		this.adjustGunForRobotTurn = false;
 		this.adjustRadarForGunTurn = false;
@@ -71,11 +76,13 @@ class RobotPeer {
 		this.setTurn(val);
 		this.states.flush('turn');
 	}
-	turnRight(val) {
-		this.turn(val);
+	turnGun(val) {
+		this.setTurnGun(val);
+		this.states.flush('turnGun');
 	}
-	turnLeft(val) {
-		this.turn(-val);
+	turnRadar(val) {
+		this.setTurnRadar(val);
+		this.states.flush('turnRadar');
 	}
 	fire(val) {
 		this.setFire(val);
@@ -94,16 +101,29 @@ class RobotPeer {
 	setBack(val) {
 		this.setAhead(-val);
 	}
-	setTurn(val) {
+	setTurnRadians(val) {
 		this.states.set({
-			turn: val / 180 * Math.PI,
+			turn: val,
 		});
 	}
-	setTurnRight(val) {
-		this.setTurn(val);
+	setTurn(val) {
+		this.setTurnRadians(val / 180 * Math.PI);
 	}
-	setTurnLeft(val) {
-		this.setTurn(-val);
+	setTurnGunRadians(val) {
+		this.states.set({
+			turnGun: val,
+		});
+	}
+	setTurnGun(val) {
+		this.setTurnGunRadians(val / 180 * Math.PI);
+	}
+	setTurnRadarRadians(val) {
+		this.states.set({
+			turnRadar: val,
+		});
+	}
+	setTurnRadar(val) {
+		this.setTurnRadarRadians(val / 180 * Math.PI);
 	}
 	setFire(val) {
 		if (this.gunHeat > 0)
@@ -122,16 +142,16 @@ class RobotPeer {
 	}
 
 	update(sprites) {
-		sprites.forEach(that => {
-			this.tryScan(that);
-			that.tryScan(this);
-		});
-
 		this.radarSector.headingB = this.radarHeading;
 
-		this.turnBody(this.turnRate);
+		this.doTurnBody(this.turnRate);
 		this.turnRate = 0;
-		this.turnRadar(0);
+		this.doTurnGun(this.gunTurnRate);
+		this.gunTurnRate = 0;
+		this.doTurnRadar(this.radarTurnRate);
+		this.radarTurnRate = 0;
+
+		this.gunRay.heading = this.gunHeading;
 
 		this.radarSector.headingA = this.radarHeading;
 
@@ -145,21 +165,28 @@ class RobotPeer {
 
 		if (this.energy <= 0)
 			this.explode(); ///
+
+		this.lastGunHeat = this.gunHeat;
+
+		sprites.forEach(that => {
+			this.tryScan(that);
+			that.tryScan(this);
+		});
 	}
 
-	turnBody(turnRate) {
+	doTurnBody(turnRate) {
 		this.heading += turnRate;
 		if (!this.adjustGunForRobotTurn)
-			this.turnGun(turnRate);
+			this.doTurnGun(turnRate);
 	}
 
-	turnGun(turnRate) {
+	doTurnGun(turnRate) {
 		this.gunHeading += turnRate;
 		if (!this.adjustRadarForGunTurn)
-			this.turnRadar(turnRate);
+			this.doTurnRadar(turnRate);
 	}
 
-	turnRadar(turnRate) {
+	doTurnRadar(turnRate) {
 		this.radarHeading += turnRate;
 	}
 
@@ -173,7 +200,10 @@ class RobotPeer {
 	draw() {
 		this.shape.stroke(this.gfx, this.position, this.heading);
 
+		this.gunRay.draw(this.gfx, this.position.projected(-Math.min(this.lastGunHeat / 1.6, 1) * 18 * (1-0.618), this.gunRay.heading), Rules.botSize);
+
 		let clockwise = Angle.normalRelative(this.radarSector.headingB - this.radarSector.headingA) > 0;
+		this.radarDot.fill(this.gfx, this.position);
 		this.radarSector.fill(this.gfx, this.position, clockwise, 0.02);
 		this.radarSector.stroke(this.gfx, this.position, clockwise, 0.02);
 	}
@@ -225,14 +255,7 @@ class RobotPeer {
 		this.addExplosionPeer(explosionPeer);
 	}
 
-	inRange(phi) {
-		return Angle.inRange(phi, Angle.range(this.radarSector.headingA, this.radarSector.headingB));
-	}
-
 	inSector(that) {
-		// let phi = this.position.phi(that.position);
-		// return this.inRange(phi);
-
 		let d = this.position.distance(that.position);
 		let phi = this.position.phi(that.position);
 		let side = Math.asin(18 / d);

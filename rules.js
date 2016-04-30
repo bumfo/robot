@@ -1,6 +1,10 @@
 const Utils = require('./utils.js');
 
 class Rules {
+	static getMaxTurnRate(speed) {
+		return (10 - 0.75 * speed) / 180 * Math.PI;
+	}
+
 	static getBulletDamage(power) {
 		let damage = 4 * power;
 
@@ -52,6 +56,9 @@ class Rules {
 }
 
 Object.assign(Rules, {
+	gunMaxTurnRate: Math.PI / 9,
+	radarMaxTurnRate: Math.PI / 4,
+
 	initialEnergy: 100,
 	maxVelocity: 8,
 

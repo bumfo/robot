@@ -9,6 +9,13 @@ class Point extends Vec {
 		super(x, y);
 	}
 
+	clone() {
+		return new Point(this.x, this.y);
+	}
+	projected(rho, theta) {
+		return new Point(this.x + rho * Math.cos(theta), this.y + rho * Math.sin(theta));
+	}
+
 	distance(u) {
 		return Math.sqrt(sq(this.x - u.x) + sq(this.y - u.y));
 	}
