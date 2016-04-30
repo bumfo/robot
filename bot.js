@@ -8,6 +8,17 @@ class Bot {
 		});
 
 		this._peer.heading = heading;
+
+		this.listen(this._peer.emitter, {
+			update: 'onUpdate',
+			scannedRobot: 'onScannedRobot',
+			robotDeath: 'onRobotDeath',
+			hitRobot: 'onHitRobot',
+			hitByBullet: 'onHitByBullet',
+			bulletHit: 'onBulletHit',
+			bulletHitBullet: 'onBulletHitBullet',
+			updated: 'onUpdated',
+		});
 	}
 
 	loop(val) {
@@ -25,6 +36,23 @@ class Bot {
 	fire(val) {
 		this._peer.fire(val);
 	}
+
+	listen(publisher, listeners) {
+		var keys = Object.keys(listeners);
+		for (var i = 0, n = keys.length; i < n; ++i) {
+			let key = keys[i];
+			publisher.on(key, e => this[listeners[key]](e));
+		}
+	}
+
+	onUpdate() {}
+	onScannedRobot() {}
+	onRobotDeath() {}
+	onHitRobot() {}
+	onHitByBullet() {}
+	onBulletHit() {}
+	onBulletHitBullet() {}
+	onUpdated() {}
 }
 
 module.exports = Bot;

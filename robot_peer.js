@@ -13,8 +13,28 @@ const {
 	Circle, Sector, Rectangle
 } = require('./shapes.js');
 
+class Emitter {
+	constructor() {
+		this._callbacks = new Map();
+	}
+	on(event, listener) {
+		this.getListeners(event).push(listener);
+	}
+	emit(event, e) {
+		var arr = this.getListeners(event);
+		for (var i = 0, n = arr.length; i < n; ++i) {
+			arr[i](e);
+		}
+	}
+	getListeners(event) {
+		var listeners = this._callbacks.get(event);
+		return listeners || this._callbacks.set(event, listeners = []), listeners;
+	}
+}
+
 class RobotPeer {
 	constructor() {
+		this.emitter = new Emitter();
 		this.states = new States();
 
 		this.position = new Point();
@@ -144,7 +164,9 @@ class RobotPeer {
 	}
 
 	exec() {
-		// console.log(JSON.stringify(this.states));
+		this.scans.forEach(that => this.emitter.emit('scannedRobot', that));
+		this.scans.splice(0, this.scans.length);
+
 		this.states.exec(this);
 	}
 
