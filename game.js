@@ -18,10 +18,18 @@ function traversal(u, fn) {
 
 class Game {
 	constructor() {
+		this.init();
+		this.initUI();
+		this.initLoop();
+	}
+	init() {
+		this.countdown = 120;
+
 		this.sprites = [];
 		this.projectiles = [];
 		this.particles = [];
-
+	}
+	initUI() {
 		Canvas.prepare();
 
 		this.width = 800;
@@ -47,6 +55,9 @@ class Game {
 			}
 		});
 
+		this.onReady = () => {};
+	}
+	initLoop() {
 		let frame = () => {
 			if (this.paused) {
 				requestAnimationFrame(frame);
@@ -66,6 +77,15 @@ class Game {
 
 			this.sprites.forEach(that => that.exec());
 
+			if (this.sprites.length <= 1) {
+				--this.countdown;
+			}
+
+			if (this.countdown <= 0) {
+				this.countdown = NaN;
+				this.onReady();
+			}
+
 			requestAnimationFrame(frame);
 
 			if (this.pauseThen) {
@@ -79,6 +99,7 @@ class Game {
 	resize(width = this.width, height = this.height) {
 		this.canvas.resize(width, height);
 	}
+
 	getRobotPeer() {
 		let peer = new RobotPeer();
 		peer.gfx = this.gfx;
@@ -89,11 +110,9 @@ class Game {
 	addSprite(that) {
 		this.sprites.push(that);
 	}
-
 	addProjectile(that) {
 		this.projectiles.push(that);
 	}
-
 	addParticle(that) {
 		this.particles.push(that);
 	}
